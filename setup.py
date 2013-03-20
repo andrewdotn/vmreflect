@@ -122,10 +122,11 @@ setup(cmdclass={'test': test_cmd,
 
       classifiers = [
           # https://pypi.python.org/pypi?:action=list_classifiers
-          'Development Status :: 2 - Pre-Alpha',
+          'Development Status :: 3 - Alpha',
           'License :: OSI Approved :: BSD License',
           'Environment :: Console',
           'Environment :: MacOS X',
+          'Operating System :: MacOS :: MacOS X',
           'Intended Audience :: Developers',
           'Programming Language :: Python :: 2.7',
           'Topic :: System :: Networking',
