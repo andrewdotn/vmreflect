@@ -7,8 +7,12 @@ Ruby on Rails or something. The development website is being served as
 HTTP at ``localhost:8000``. You need to test it in Internet Explorer.
 But you don’t want to open up the firewall on your MacBook.
 
+.. comment: begin omit from long_description
+
 .. figure:: doc/images/firewall.png
    :alt: Mac firewall settings dialog with “Block all incoming connections” checked
+
+.. comment: end omit from long_description
 
 ``vmreflect`` sets up a tunnel so that ``localhost:8000`` in a Windows
 virtual machine running under VMware Fusion forwards to ``localhost:8000``

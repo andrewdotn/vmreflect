@@ -83,7 +83,21 @@ my_build_cmd.sub_commands.extend([
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'),
           'r') as readme:
-    long_description = readme.read()
+
+    # The image in README.rst causes it to show up as plain text on pypi.
+    # These magic comments omit that part of the long_description.
+    src_lines = []
+    copy = True
+    for line in readme.readlines():
+        if line.startswith(".. comment: begin omit from long_description"):
+            copy=False
+
+        if copy:
+            src_lines.append(line)
+
+        if line.startswith(".. comment: end omit from long_description"):
+            copy=True
+    long_description = ''.join(src_lines)
 
 setup(cmdclass={'test': test_cmd,
                 'readme': readme_cmd,
