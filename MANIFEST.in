@@ -4,3 +4,4 @@ include vmreflect/lib-win32/*.zip
 include vmreflect/lib-win32/socketclient/Makefile
 include vmreflect/lib-win32/socketclient/socketclient.c
 include vmreflect/lib-win32/socketclient/socketclient.exe
+include vmreflect/lib-win32/socketclient/*.py

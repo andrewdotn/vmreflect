@@ -87,6 +87,7 @@ setup(cmdclass= {'test': test_cmd, 'readme': readme_cmd},
       install_requires = [
           'TcpProxyReflector >=0.1.3',
           'path.py >=3.0.1',
+          'pefile >= 1.2.10',
       ],
 
       packages=[
