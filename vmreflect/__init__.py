@@ -35,7 +35,7 @@ listen_http=
 # The reflector will listen on the address and port range below
 reflector=0.0.0.0:%(forward_port_minus_one)d-%(forward_port_minus_one)d-%(forward_port_plus_one)d
 
-user_db=user_db
+user_db=%(temp_dir)s\user_db
 
 # Send keep alive packets to every connected client at regular intervals.
 # Time is in seconds. 0 disables the sending of these packets.
@@ -89,20 +89,21 @@ class Tunnel(object):
                 out.write(tcpr_zip.read('TcpProxyReflector-0.1.3/tcpr.exe'))
             local_tcpr_exe.chmod(0600)
 
+            guest_temp_file_base = self.vmapi._create_temp_file()
+            self.guest_temp_dir = guest_temp_file_base + '.d'
+
             # Step 1. Create the .ini file.
             self._create_ini_file()
 
-            guest_temp_file_base = self.vmapi._create_temp_file()
-            guest_temp_dir = guest_temp_file_base + '.d'
             try:
                 self.vmapi.copy_file_to_guest(self.host_temp_dir,
-                                              guest_temp_dir)
+                                              self.guest_temp_dir)
                 try:
                     killed = False
                     started = False
 
-                    remote_tcpr_cmd = guest_temp_dir + '\\' + 'tcpr.exe'
-                    remote_tcpr_ini = guest_temp_dir + '\\' + 'tcpr.ini'
+                    remote_tcpr_cmd = self.guest_temp_dir + '\\' + 'tcpr.exe'
+                    remote_tcpr_ini = self.guest_temp_dir + '\\' + 'tcpr.ini'
 
                     # Step 2. Create a manager password.
                     self.vmapi._run_command('%s %s -m %s' % (
@@ -162,7 +163,7 @@ class Tunnel(object):
                         self.vmapi.kill_process(server_pid)
                 finally:
                     if killed or not started:
-                        self.vmapi.delete_directory(guest_temp_dir)
+                        self.vmapi.delete_directory(self.guest_temp_dir)
                     else:
                         print 'started?', started, 'killed?', killed
             finally:
@@ -210,6 +211,7 @@ class Tunnel(object):
                 'server_ip': self.server_ip,
                 'client_name': self.client_name,
                 'client_password': self.client_password,
+                'temp_dir': self.guest_temp_dir,
             })
 
 def main(args=None):
