@@ -1,0 +1,12 @@
+syntax: glob
+
+README.html
+MANIFEST
+Makefile.local
+build
+dist
+notes.txt
+files
+vmreflect.egg-info
+vmreflect/lib-win32/socketclient/Makefile.local
+vmreflect/lib-win32/socketclient/socketclient

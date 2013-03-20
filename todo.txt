@@ -1,0 +1,6 @@
+Maybe someday:
+[ ] tcpr bug -- closing half a connection crashes the serverr
+
+[ ] Use the VIX API instead of vmrun, because vmrun is way too slow.
+[ ] Clean up the code by using nested with statements instead of finally.
+[ ] Write custom multiplexing protocol and drop TcpProxyReflector.
