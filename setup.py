@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 
 import os.path
+import subprocess
 
 try:
     from setuptools import setup
@@ -8,6 +9,7 @@ except ImportError:
     from distutils.core import setup
 
 from distutils.core import Command
+from distutils.command.build import build as orig_build_cmd
 
 class test_cmd(Command):
     description = 'run unit tests'
@@ -36,27 +38,58 @@ class readme_cmd(Command):
         pass
 
     def run(self):
-        import os.path
+        from path import path
         from docutils.core import publish_file
-        basedir = os.path.dirname(__file__)
-        with open(os.path.join(basedir, 'README.rst'), 'r') as src:
-            with open(os.path.join(basedir, 'README.html'), 'w') as dst:
+
+        basedir = path(__file__).dirname()
+        rst_path = basedir.joinpath('README.rst')
+        html_path = basedir.joinpath('README.html')
+        if html_path.isfile() and html_path.mtime >= rst_path.mtime:
+            return
+
+        with open(rst_path, 'r') as src:
+            with open(html_path, 'w') as dst:
                 publish_file(source=src, destination=dst, writer_name='html')
         try:
-            import subprocess
             reload_tab_cmd = 'reload-tab'
-            subprocess.check_call(
-                [reload_tab_cmd,
-                 os.path.abspath(os.path.join(basedir, 'README.html'))])
+            subprocess.check_call([reload_tab_cmd, html_path])
         except OSError, e:
             print 'Error calling %s: %s' % (reload_tab_cmd, e)
+
+class build_aux_cmd(Command):
+    description = 'call make in vmreflect/lib-win32/socketclient'
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from path import path
+        subprocess.check_call(
+            ['make'], cwd=(path(__file__).dirname()
+                           .joinpath('vmreflect/lib-win32/socketclient')))
+
+class my_build_cmd(orig_build_cmd):
+    pass
+my_build_cmd.sub_commands.extend([
+    ('build_aux', lambda x: True),
+    ('readme', lambda x: True),
+])
 
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst'),
           'r') as readme:
     long_description = readme.read()
 
-setup(cmdclass= {'test': test_cmd, 'readme': readme_cmd},
+setup(cmdclass={'test': test_cmd,
+                'readme': readme_cmd,
+                'build': my_build_cmd,
+                'build_aux': build_aux_cmd,
+               },
 
       name='vmreflect',
       version=__import__('vmreflect').__version__,
