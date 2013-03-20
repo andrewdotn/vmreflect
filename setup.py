@@ -113,7 +113,7 @@ setup(cmdclass={'test': test_cmd,
       url='https://www.github.com/andrewdotn/vmreflect',
 
       # max 200 characters
-      description="automatically tunnel localhost servers on your mac into VMware fusion Windows guests",
+      description="automatically tunnel localhost servers on your Mac into VMware Fusion Windows guests",
       keywords=['proxy', 'reflector', 'virtual machine', 'firewall',
                 'port forwarding'],
 
