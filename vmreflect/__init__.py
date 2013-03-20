@@ -19,7 +19,7 @@ from path import path
 from .vmapi import VM
 from .utils import get_random_string
 
-__version__ = '0.1'
+__version__ = '0.1.1'
 
 _TCPR_INI_TEMPLATE = """
 [server]
