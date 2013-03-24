@@ -134,19 +134,27 @@ class Tunnel(object):
                         client_proc = subprocess.Popen(
                             ['tcpr', self.local_tcpr_ini, '-c'])
 
-                        # FIXME!
-                        time.sleep(0.2)
-
                         try:
                             # Step 7. Start forwarding.
-                            self._send_to_console(
-                                'list\nstart 0 * p=%d' % self.forward_port,
-                                'forwarder listening on 0.0.0.0:%d'
-                                % self.forward_port)
+                            for i in range(1, 5):
+                                try:
+                                    print 'Waiting for tunnel to open.',
+                                    print 'Connection attempt %d' % i
+                                    self._send_to_console(
+                                        'list\nstart 0 * p=%d' % self.forward_port,
+                                        'forwarder listening on 0.0.0.0:%d'
+                                        % self.forward_port)
+                                    break
+                                except Exception, e:
+                                    if 'expected' not in e.message:
+                                        raise
 
                             # Signal that the tunnel is open
                             if started_event:
                                 started_event.set()
+                            print 'The tunnel is now open on port %d.' % (
+                                self.forward_port,),
+                            print 'Press ^C to close it.'
 
                             # Wait until the calling code is done with the
                             # tunnel, or the client process is killed.
