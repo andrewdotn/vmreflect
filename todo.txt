@@ -1,5 +1,5 @@
 Maybe someday:
-[ ] tcpr bug -- closing half a connection crashes the serverr
+[ ] tcpr bug -- closing half a connection crashes the server
 
 [ ] Use the VIX API instead of vmrun, because vmrun is way too slow.
 [ ] Clean up the code by using nested with statements instead of finally.
